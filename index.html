@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles/styles.css" />
+    <title>user posts explorer</title>
+  </head>
+  <body>
+    <main>
+      <section class="users-container">
+        <h1 class="table-title">Users</h1>
+        <table>
+          <thead>
+            <th class="th-name">name</th>
+            <th class="th-city">city</th>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <section class="user-posts-modal-overlay">
+      <div class="user-modal">
+        <div class="user-name"><h2 id="userProfileName"></h2></div>
+        <div class="user-profile-info">
+          <p id="userProfileUsername"></p>
+          <p id="userProfileEmail"></p>
+          <p id="userProfilePhone"></p>
+        </div>
+        <div class="user-post-titles">
+          <h3>Posts</h3>
+          <ul id="userProfilePosts"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="user-post-comment-modal-overlay">
+      <div class="user-modal">
+        <div class="user-post">
+          <h2 class="post-title"></h2>
+          <p class="post-body"></p>
+        </div>
+        <div class="post-comments">
+          <h3>Comments</h3>
+          <ul id="postCommentsUl"></ul>
+        </div>
+      </div>
+    </section>
+
+    <div class="show-loading" id="showLoading">
+      <span class="loader-spinner"></span>
+    </div>
+
+    <script src="javascript/app.js"></script>
+  </body>
+</html>
