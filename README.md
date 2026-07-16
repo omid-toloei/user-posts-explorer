@@ -10,6 +10,7 @@ A simple, clean **Vanilla JavaScript** app that uses the `Fetch API` to retrieve
 - Error handling (no internet connection, network errors, server errors like 404 / 500 / 503)
 - Loading spinner shown while fetching data from the server
 - Clean, modern dark-themed UI
+- Load more users button
 
 ## 🛠️ Built With
 
