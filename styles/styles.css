@@ -21,6 +21,10 @@ main {
   width: 600px;
   margin-top: 54px;
   margin-bottom: 54px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 table {
   color: #fff;
@@ -55,6 +59,20 @@ th {
 tbody tr:hover {
   border: 2px green solid;
   cursor: pointer;
+}
+.users-container button {
+  margin-top: 22px;
+  font-size: 14px;
+  padding: 3px 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 1px solid #494949;
+  color: #cbcaca;
+  background-color: #000000;
+  transition: background-color 0.2s;
+  display: none;
+} .users-container button:hover {
+  background-color: #2d2d2d;
 }
 .user-posts-modal-overlay,
 .user-post-comment-modal-overlay {
