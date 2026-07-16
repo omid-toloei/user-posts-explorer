@@ -6,18 +6,28 @@ Global Variables
 let users = [];
 let posts = [];
 let comments = [];
+let first5users = [];
 
 let isLoading = false;
+let counterForLoadMore = 10;
 
 /* =========================
 DOM Elements
 ========================= */
 
-const userPostsModalParent = document.querySelector(".user-posts-modal-overlay");
-const userPostCommentParent = document.querySelector(".user-post-comment-modal-overlay");
+// document elements
+
+// loading
+
 const showLoading = document.querySelector("#showLoading");
+// table
+
 const tableBody = document.querySelector("#tableBody");
-const userPostsModalOverlay = document.querySelector(".user-posts-modal-overlay");
+const loadMoreBtn = document.querySelector("#loadMoreBtn");
+// user profile modal
+
+const userPostsModalParent = document.querySelector(".user-posts-modal-overlay");
+
 const userProfileName = document.querySelector("#userProfileName");
 const userProfileUsername = document.querySelector("#userProfileUsername");
 const userProfileEmail = document.querySelector("#userProfileEmail");
@@ -25,6 +35,9 @@ const userProfilePhone = document.querySelector("#userProfilePhone");
 const userProfilePosts = document.querySelector("#userProfilePosts");
 const postTitle = document.querySelector(".post-title");
 const postBody = document.querySelector(".post-body");
+// user post comments modal
+
+const userPostCommentParent = document.querySelector(".user-post-comment-modal-overlay");
 
 const postCommentsUl = document.querySelector("#postCommentsUl");
 const userCommentName = document.querySelector(".user-comment-name");
@@ -45,6 +58,10 @@ userPostCommentParent.addEventListener("click", (event) => {
   if (event.target === userPostCommentParent) {
     userPostCommentParent.style.display = "none";
   }
+});
+
+loadMoreBtn.addEventListener("click", () => {
+  getMoreUsers();
 });
 
 /* =========================
@@ -113,22 +130,43 @@ const getComments = async () => {
 Functions
 ========================= */
 
-async function run() {
-  await getUsers();
-  showUsers();
+function getFirst5Users(array) {
+  let first5Users = array.filter((element) => {
+    return element.id <= 5;
+  });
+  loadMoreBtn.style.display = "block";
+  return first5Users;
 }
 
+function getMoreUsers() {
+  let moreUsers = users.filter((element) => {
+    return element.id <= counterForLoadMore;
+  });
+
+  counterForLoadMore += 5;
+  showUsers(moreUsers);
+}
+
+
+
+async function run() {
+  await getUsers()
+  showUsers(getFirst5Users(users));
+}
 run();
 
 /* =========================
 Render Functions
 ========================= */
 
-function showUsers() {
+function showUsers(array) {
+  if (counterForLoadMore > users.length) {
+    loadMoreBtn.style.display = "none";
+  }
   tableBody.innerHTML = "";
 
   let userTableStructure = "";
-  users.forEach((element) => {
+  array.forEach((element) => {
     userTableStructure += `<tr title="click to see user profile" data-user-id="${element.id}" class="user-table-row">
     <td>${element.name}</td>
     <td>${element.address.city}</td>
@@ -148,7 +186,7 @@ function showUsers() {
 
 async function showPosts(userId) {
   await getPosts();
-  userPostsModalOverlay.style.display = "flex";
+  userPostsModalParent.style.display = "flex";
 
   const user = users.find(user => user.id === Number(userId));
 
