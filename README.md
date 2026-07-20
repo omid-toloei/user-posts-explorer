@@ -11,6 +11,7 @@ A simple, clean **Vanilla JavaScript** app that uses the `Fetch API` to retrieve
 - Loading spinner shown while fetching data from the server
 - Clean, modern dark-themed UI
 - Load more users button
+- search between usernames
 
 ## 🛠️ Built With
 
