@@ -26,7 +26,9 @@ const tableBody = document.querySelector("#tableBody");
 const loadMoreBtn = document.querySelector("#loadMoreBtn");
 // user profile modal
 
-const userPostsModalParent = document.querySelector(".user-posts-modal-overlay");
+const userPostsModalParent = document.querySelector(
+  ".user-posts-modal-overlay",
+);
 
 const userProfileName = document.querySelector("#userProfileName");
 const userProfileUsername = document.querySelector("#userProfileUsername");
@@ -37,12 +39,18 @@ const postTitle = document.querySelector(".post-title");
 const postBody = document.querySelector(".post-body");
 // user post comments modal
 
-const userPostCommentParent = document.querySelector(".user-post-comment-modal-overlay");
+const userPostCommentParent = document.querySelector(
+  ".user-post-comment-modal-overlay",
+);
 
 const postCommentsUl = document.querySelector("#postCommentsUl");
 const userCommentName = document.querySelector(".user-comment-name");
 const userCommentEmail = document.querySelector(".user-comment-email");
 const userComment = document.querySelector(".user-comment");
+
+// search box
+const searchInput = document.querySelector("#searchInput");
+const showLengthOfResult = document.querySelector("#showLengthOfResult");
 
 /* =========================
 Event Listeners
@@ -62,6 +70,10 @@ userPostCommentParent.addEventListener("click", (event) => {
 
 loadMoreBtn.addEventListener("click", () => {
   getMoreUsers();
+});
+
+searchInput.addEventListener("keyup", () => {
+  getSearchResult();
 });
 
 /* =========================
@@ -96,7 +108,6 @@ const getFetchData = async (urlAddress) => {
     const dataJson = await response.json();
 
     return dataJson;
-
   } catch (error) {
     if (!navigator.onLine) {
       alert("Please check your internet connection!");
@@ -111,27 +122,34 @@ const getFetchData = async (urlAddress) => {
     isLoading = false;
     showLoading.style.display = "none";
   }
-}
+};
 
 const getUsers = async () => {
-  let apiUsersResponse = await getFetchData("https://jsonplaceholder.typicode.com/users");
-  users.push(...apiUsersResponse);
-}
+  let apiUsersResponse = await getFetchData(
+    "https://jsonplaceholder.typicode.com/users",
+  );
+  users = apiUsersResponse;
+};
 const getPosts = async () => {
-  let apiPostsResponse = await getFetchData("https://jsonplaceholder.typicode.com/posts");
+  let apiPostsResponse = await getFetchData(
+    "https://jsonplaceholder.typicode.com/posts",
+  );
   posts = apiPostsResponse;
-}
+};
 const getComments = async () => {
-  let apiCommentsResponse = await getFetchData("https://jsonplaceholder.typicode.com/comments");
+  let apiCommentsResponse = await getFetchData(
+    "https://jsonplaceholder.typicode.com/comments",
+  );
   comments = apiCommentsResponse;
-}
+};
 
 /* =========================
 Functions
 ========================= */
 
 function getFirst5Users(array) {
-  let first5Users = array.filter((element) => {
+  let first5Users = [];
+  first5Users = array.filter((element) => {
     return element.id <= 5;
   });
   loadMoreBtn.style.display = "block";
@@ -147,13 +165,39 @@ function getMoreUsers() {
   showUsers(moreUsers);
 }
 
-
-
 async function run() {
-  await getUsers()
+  await getUsers();
   showUsers(getFirst5Users(users));
 }
-run();
+
+function getSearchResult() {
+  loadMoreBtn.style.display = "none";
+  let searchInputValue = searchInput.value;
+
+  let searchInputResult = users.filter((element) => {
+    return element.name.includes(searchInputValue);
+  });
+
+  showLengthOfResult.style.display = "block";
+  switch (searchInputResult.length) {
+    case 0:
+      showLengthOfResult.textContent = `No results found`;
+      break;
+    case 1:
+      showLengthOfResult.textContent = `1 result`;
+      break;
+    default:
+      showLengthOfResult.textContent = `${searchInputResult.length} results`;
+  }
+
+  showUsers(searchInputResult);
+
+  if (searchInputValue == "") {
+    showLengthOfResult.style.display = "none";
+    showUsers(getFirst5Users(users));
+    loadMoreBtn.style.display = "block";
+  }
+}
 
 /* =========================
 Render Functions
@@ -188,13 +232,12 @@ async function showPosts(userId) {
   await getPosts();
   userPostsModalParent.style.display = "flex";
 
-  const user = users.find(user => user.id === Number(userId));
+  const user = users.find((user) => user.id === Number(userId));
 
   userProfileName.textContent = user.name;
   userProfileUsername.innerHTML = `<img src="icons/at-icon.png" /> ${user.username}`;
   userProfileEmail.innerHTML = `<img src="icons/email-icon.png" /> ${user.email}`;
   userProfilePhone.innerHTML = `<img src="icons/phone-icon.png" /> ${user.phone}`;
-
 
   userProfilePosts.innerHTML = "";
   let newPostTitleStructure = "";
@@ -221,7 +264,7 @@ async function showComments(postId) {
   await getComments();
   userPostCommentParent.style.display = "flex";
 
-  const post = posts.find(post => post.id === Number(postId));
+  const post = posts.find((post) => post.id === Number(postId));
 
   postTitle.textContent = post.title;
   postBody.textContent = post.body;
@@ -245,3 +288,5 @@ async function showComments(postId) {
 
   postCommentsUl.innerHTML = newCommentStructure;
 }
+
+run();
